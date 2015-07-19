@@ -3,6 +3,7 @@ package me.anhvannguyen.android.locationcoordinates;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,13 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainActivityFragment extends Fragment
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    // time in millisecond
+    // 1000ms = 1 second
+    private final Long UPDATE_INTERVAL = 1000l;
 
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
@@ -61,21 +62,30 @@ public class MainActivityFragment extends Fragment
             mLatTextView.setText(String.valueOf(mLastLocation.getLatitude()));
             mLongTextView.setText(String.valueOf(mLastLocation.getLongitude()));
         }
+
+        // To store parameters for requests to the fused location provider, create a  LocationRequest.
+        // The parameters determine the levels of accuracy requested
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d(LOG_TAG, "GoogleApiClient connection suspended");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        mLatTextView.setText(String.valueOf(location.getLatitude()));
+        mLongTextView.setText(String.valueOf(location.getLongitude()));
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.d(LOG_TAG, "GoogleApiClient connection failed");
     }
 
     @Override

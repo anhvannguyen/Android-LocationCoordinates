@@ -63,13 +63,8 @@ public class MainActivityFragment extends Fragment
             mLongTextView.setText(String.valueOf(mLastLocation.getLongitude()));
         }
 
-        // To store parameters for requests to the fused location provider, create a  LocationRequest.
-        // The parameters determine the levels of accuracy requested
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        createLocationRequest();
+        startLocationUpdates();
     }
 
     @Override
@@ -102,5 +97,37 @@ public class MainActivityFragment extends Fragment
             mGoogleApiClient.disconnect();
         }
         super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+        }
+    }
+
+    protected void createLocationRequest() {
+        // To store parameters for requests to the fused location provider, create a  LocationRequest.
+        // The parameters determine the levels of accuracy requested
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
     }
 }

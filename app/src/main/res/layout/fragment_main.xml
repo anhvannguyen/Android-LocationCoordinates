@@ -1,0 +1,22 @@
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    app:columnCount="2">
+
+
+    <TextView
+        android:text="@string/latitude_label"/>
+    <TextView
+        android:id="@+id/lat_textview"
+        android:paddingLeft="16dp"/>
+
+    <TextView
+        android:text="@string/longitude_label"/>
+    <TextView
+        android:id="@+id/long_textview"
+        android:paddingLeft="16dp"/>
+</android.support.v7.widget.GridLayout>
